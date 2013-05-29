@@ -47,7 +47,7 @@ void createLSystems() {
 	lsystems[1].step();
 
 	vector<Rule> plant_rules;
-	plant_rules.push_back(Rule('F', "FF-[-F+F+F]+[+F-F-F]"));
+	plant_rules.push_back(Rule('F', "C0FF-[C1-F+F+F]+[C2+F-F-F]"));
 	lsystems.push_back(LSystem("Fractal Plant", plant_rules, "F", toRadians(22), 4, 5, xSize, ySize));
 	lsystems[2].step();
 

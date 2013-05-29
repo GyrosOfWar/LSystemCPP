@@ -14,6 +14,7 @@ class TurtleDrawing {
 	double angle;
 	sf::VertexArray points;
 	stack<double> stack;
+	sf::Color drawColor;
 public:
 	TurtleDrawing(int xSize, int ySize, int startX, int startY);
 	TurtleDrawing(int xSize, int ySize);
@@ -31,5 +32,5 @@ public:
 	double getAngle();
 	void setAngle(double d);
 	void clear();
-
+	void setColor(sf::Color);
 };

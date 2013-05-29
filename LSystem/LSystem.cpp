@@ -5,6 +5,10 @@ LSystem::LSystem(string name, vector<Rule> rules, string axiom, double angle, in
 	name(name), rules(rules), axiom(axiom), angle(angle), iterations(iterations), distance(distance), xSize(xSize), ySize(ySize) {
 		current = axiom;
 		td = TurtleDrawing(xSize, ySize);
+		colorList[4];
+		colorList[0] = sf::Color(140, 80, 60, (int) (0.75 * 255.0));
+		colorList[1] = sf::Color(24, 180, 24, (int) (0.75 * 255.0));
+		colorList[2] = sf::Color(64, 255, 64, 128);
 }
 
 void LSystem::step() {
@@ -39,6 +43,7 @@ sf::VertexArray LSystem::draw() {
 	for(auto it = current.begin(); it != current.end(); ++it) {
 		float x, y, stackAngle = 0.0f;
 		char c = (char) *it;
+		int color;
 		switch(c) {
 		case 'F':
 			td.forward(distance);
@@ -64,9 +69,22 @@ sf::VertexArray LSystem::draw() {
 			td.moveTo(x, y);
 			td.setAngle(stackAngle);
 			break;
+		case 'C':
+			color = *(++it) - '0';
+			td.setColor(colorList[color]);
+			std::cout << (int) colorList[color].r << ", " << (int) colorList[color].g << ", " << (int) colorList[color].b << (int) colorList[color].a << std::endl;
+			break;
 		case 'X':
 			break;
 		case 'Y':
+			break;
+		case '0':
+			break;
+		case '1':
+			break;
+		case '2':
+			break;
+		case '3':
 			break;
 
 		default:
