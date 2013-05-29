@@ -140,7 +140,7 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 
 int main() {
 	createLSystems();
-	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(xSize, ySize), "Window");
+	sf::RenderWindow window(sf::VideoMode(xSize, ySize), "Window");
 	// Build vector of VertexArrays that hold the vertices for every L-System
 	for(unsigned int i = 0; i < lsystems.size(); i++) {
 		verts.push_back(lsystems[i].draw());
@@ -148,23 +148,40 @@ int main() {
 
 	// Load font
 	sf::Font arial;
-	if(!arial.loadFromFile("C:\\Windows\\Fonts\\arial.ttf")) {
-		perror("Error loading the font: Font not found");
+#ifdef WIN32
+	if(!arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf")) {
+		perror("Error loading the font: ");
 		return -1;
 	}
+#else
+	if(!arial.loadFromFile("/usr/share/fonts/freefont/FreeSans.ttf")) {
+		perror("Error loading the font: ");
+		return -1;
+	}
+#endif
 
 	sf::Text lSystemName(lsystems[selectedLSystem].getName(), arial, 30);
-
+	lSystemName.setPosition(xSize-lSystemName.getGlobalBounds().width - 20, ySize-50);
+	
 	while(window.isOpen()) {
 		sf::Event event;
 		while(window.pollEvent(event)) {
 			handleEvents(event, window);
 		}
 		lSystemName.setString(lsystems[selectedLSystem].getName());
+		lSystemName.setPosition(xSize-lSystemName.getGlobalBounds().width - 20, ySize-50);
 		window.clear();
 		window.draw(verts[selectedLSystem], transform);
 		window.draw(lSystemName);
 		window.display();
 	}
+	//int sum = 0;
+	//for(int i = 0; i < lsystems.size(); i++) {
+	//	int l =  lsystems[i].getCurrent().length() * sizeof("a");
+	//	cout << lsystems[i].getName() << ": " << l << endl;
+	//	sum += l;
+	//}
+	//cout << "Sum: " << sum << endl;
+	//getchar();
 	return 0;
 }
