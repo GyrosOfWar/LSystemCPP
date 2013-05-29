@@ -34,6 +34,7 @@ double toDegrees(double rad) {
 	return rad * (180.0 / Pi);
 }
 
+// Fills the lsystems-Vector with some L-Systems.
 void createLSystems() {
 	vector<Rule> dragon_curve_rules;
 	dragon_curve_rules.push_back(Rule('X', "X+YF"));
@@ -69,7 +70,7 @@ void redraw(int selected) {
 	lsystems[selected].step();
 	verts[selected] = lsystems[selected].draw();
 }
-
+// Handles inputs from mouse and keyboard
 void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 	sf::Vector2i mousePos;
 	int mouseWheel;
@@ -90,9 +91,11 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 				oldMousePos = pos;
 				transform.translate(sf::Vector2f(delta.x / scale, delta.y / scale));
 			}
+			break;
 		case sf::Event::KeyPressed:
 			int newIterCount;
 			switch(event.key.code) {
+				// W and S cycle through all available L-Systems
 				case sf::Keyboard::W:
 					selectedLSystem = (selectedLSystem + 1) % NumLSystems;
 					break;
@@ -101,11 +104,13 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 					if(selectedLSystem < 0)
 						selectedLSystem = NumLSystems - 1;
 					break;
+				// O increaases the iteration counter and issues a redraw
 				case sf::Keyboard::O:
 					newIterCount = lsystems[selectedLSystem].getIterations() - 1;
 					lsystems[selectedLSystem].setIterations(newIterCount > 0 ? newIterCount : 1);
 					redraw(selectedLSystem);
 					break;
+				// P decreases the iteration counter and issues a redraw as well
 				case sf::Keyboard::P:
 					newIterCount = lsystems[selectedLSystem].getIterations() + 1;
 					lsystems[selectedLSystem].setIterations(newIterCount);
@@ -115,6 +120,7 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 					break;
 		}
 		break;
+	// Mouse wheel is used for zooming in and out
 	case sf::Event::MouseWheelMoved:
 		mouseWheel = event.mouseWheel.delta;
 		mousePos = sf::Mouse::getPosition(window);
@@ -135,17 +141,29 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 int main() {
 	createLSystems();
 	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(xSize, ySize), "Window");
+	// Build vector of VertexArrays that hold the vertices for every L-System
 	for(unsigned int i = 0; i < lsystems.size(); i++) {
 		verts.push_back(lsystems[i].draw());
 	}	
+
+	// Load font
+	sf::Font arial;
+	if(!arial.loadFromFile("C:\\Windows\\Fonts\\arial.ttf")) {
+		perror("Error loading the font: Font not found");
+		return -1;
+	}
+
+	sf::Text lSystemName(lsystems[selectedLSystem].getName(), arial, 30);
 
 	while(window.isOpen()) {
 		sf::Event event;
 		while(window.pollEvent(event)) {
 			handleEvents(event, window);
 		}
+		lSystemName.setString(lsystems[selectedLSystem].getName());
 		window.clear();
 		window.draw(verts[selectedLSystem], transform);
+		window.draw(lSystemName);
 		window.display();
 	}
 	return 0;

@@ -16,7 +16,7 @@ class LSystem {
 	int xSize;
 	int ySize;
 	string name;
-	sf::Color colorList[];
+	sf::Color colorList[4];
 public:
 	LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize);
 	void step();
