@@ -15,13 +15,17 @@ class LSystem {
 	TurtleDrawing td;
 	int xSize;
 	int ySize;
+	string name;
 public:
-	LSystem(vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize);
+	LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize);
 	void step();
 	sf::VertexArray draw();
 	TurtleDrawing getDrawing();
 	void setIterations(int);
 	int getIterations();
+	void clear();
+	string getName();
+	string getCurrent();
 private: 
 	string apply_rules(string state, vector<Rule> rules);
 };

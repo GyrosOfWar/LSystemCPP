@@ -38,34 +38,35 @@ void createLSystems() {
 	vector<Rule> dragon_curve_rules;
 	dragon_curve_rules.push_back(Rule('X', "X+YF"));
 	dragon_curve_rules.push_back(Rule('Y', "FX-Y"));
-	lsystems.push_back(LSystem(dragon_curve_rules, "FX", Pi / 2.0, 11, 10, xSize, ySize));
+	lsystems.push_back(LSystem("Dragon Curve", dragon_curve_rules, "FX", Pi / 2.0, 11, 10, xSize, ySize));
 	lsystems[0].step();
 
 	vector<Rule> koch_rules;
 	koch_rules.push_back(Rule('F', "F+F-F-F+F"));
-	lsystems.push_back(LSystem(koch_rules, "F", Pi / 2.0, 4, 15, xSize, ySize));
+	lsystems.push_back(LSystem("Koch Curve", koch_rules, "F", Pi / 2.0, 4, 15, xSize, ySize));
 	lsystems[1].step();
 
 	vector<Rule> plant_rules;
 	plant_rules.push_back(Rule('F', "FF-[-F+F+F]+[+F-F-F]"));
-	lsystems.push_back(LSystem(plant_rules, "F", toRadians(22), 4, 5, xSize, ySize));
+	lsystems.push_back(LSystem("Fractal Plant", plant_rules, "F", toRadians(22), 4, 5, xSize, ySize));
 	lsystems[2].step();
 
 	vector<Rule> sierpinski_rules;
 	sierpinski_rules.push_back(Rule('F', "F-G+F+G-F"));
 	sierpinski_rules.push_back(Rule('G', "GG"));
-	lsystems.push_back(LSystem(sierpinski_rules, "F-G-G", toRadians(120), 6, 5, xSize, ySize));
+	lsystems.push_back(LSystem("Sierpinski Triangle", sierpinski_rules, "F-G-G", toRadians(120), 6, 5, xSize, ySize));
 	lsystems[3].step();
 
 	vector<Rule> screen_filling_curve_rules;
 	screen_filling_curve_rules.push_back(Rule('X', "-YF+XFX+FY-"));
 	screen_filling_curve_rules.push_back(Rule('Y', "+XF-YFY-FX+"));
-	lsystems.push_back(LSystem(screen_filling_curve_rules, "X", toRadians(90), 6, 5, xSize, ySize));
+	lsystems.push_back(LSystem("Screen Filling Curve", screen_filling_curve_rules, "X", toRadians(90), 6, 5, xSize, ySize));
 	lsystems[4].step();
 }
 
 void redraw(int selected) {
-	lsystems[selected].getDrawing().clear();
+	lsystems[selected].clear();
+	lsystems[selected].step();
 	verts[selected] = lsystems[selected].draw();
 }
 
@@ -88,7 +89,9 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 			transform.translate(sf::Vector2f(delta.x / scale, delta.y / scale));
 		}
 	case sf::Event::KeyPressed:
+		int newIterCount;
 		switch(event.key.code) {
+
 		case sf::Keyboard::W:
 			selectedLSystem = (selectedLSystem + 1) % NumLSystems;
 			break;
@@ -97,14 +100,14 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 			if(selectedLSystem < 0)
 				selectedLSystem = NumLSystems - 1;
 			break;
-
-			// TODO this doesnt work really
 		case sf::Keyboard::O:
-			lsystems[selectedLSystem].setIterations(lsystems[selectedLSystem].getIterations() - 1);
+			newIterCount = lsystems[selectedLSystem].getIterations() - 1;
+			lsystems[selectedLSystem].setIterations(newIterCount > 0 ? newIterCount : 1);
 			redraw(selectedLSystem);
 			break;
 		case sf::Keyboard::P:
-			lsystems[selectedLSystem].setIterations(lsystems[selectedLSystem].getIterations() + 1);
+			newIterCount = lsystems[selectedLSystem].getIterations() + 1;
+			lsystems[selectedLSystem].setIterations(newIterCount);
 			redraw(selectedLSystem);
 			break;
 		}

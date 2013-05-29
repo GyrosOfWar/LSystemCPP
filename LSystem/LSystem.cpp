@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "LSystem.h"
 
-LSystem::LSystem(vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize):
-	rules(rules), axiom(axiom), angle(angle), iterations(iterations), distance(distance), xSize(xSize), ySize(ySize) {
+LSystem::LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize):
+	name(name), rules(rules), axiom(axiom), angle(angle), iterations(iterations), distance(distance), xSize(xSize), ySize(ySize) {
 		current = axiom;
 		td = TurtleDrawing(xSize, ySize);
 }
@@ -80,11 +80,23 @@ TurtleDrawing LSystem::getDrawing() {
 	return td;
 }
 
-
 void LSystem::setIterations(int i) {
 	iterations = i;
 }
 
 int LSystem::getIterations() {
 	return iterations;
+}
+
+void LSystem::clear() {
+	td.clear();
+	current = axiom;
+}
+
+string LSystem::getName() {
+	return name;
+}
+
+string LSystem::getCurrent() {
+	return current;
 }

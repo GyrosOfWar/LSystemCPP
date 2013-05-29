@@ -72,5 +72,6 @@ void TurtleDrawing::setAngle(double d) {
 void TurtleDrawing::clear() {
 	angle = 0.0;
 	stack = std::stack<double>();
+	position = sf::Vector2f(0, 0);
 	points.clear();
 }
