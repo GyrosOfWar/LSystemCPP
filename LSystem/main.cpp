@@ -159,9 +159,11 @@ int main() {
 		return -1;
 	}
 #endif
-
-	sf::Text lSystemName(lsystems[selectedLSystem].getName(), arial, 30);
-	lSystemName.setPosition(xSize-lSystemName.getGlobalBounds().width - 20, ySize-50);
+	const float textHeight = 30.0f;
+	const float offset = 20.0f;
+	sf::Text lSystemName(lsystems[selectedLSystem].getName(), arial, (unsigned int) textHeight);
+	float textWidth = lSystemName.getGlobalBounds().width;
+	lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
 	
 	while(window.isOpen()) {
 		sf::Event event;
@@ -169,19 +171,12 @@ int main() {
 			handleEvents(event, window);
 		}
 		lSystemName.setString(lsystems[selectedLSystem].getName());
-		lSystemName.setPosition(xSize-lSystemName.getGlobalBounds().width - 20, ySize-50);
+		textWidth = lSystemName.getGlobalBounds().width;
+		lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
 		window.clear();
 		window.draw(verts[selectedLSystem], transform);
 		window.draw(lSystemName);
 		window.display();
 	}
-	//int sum = 0;
-	//for(int i = 0; i < lsystems.size(); i++) {
-	//	int l =  lsystems[i].getCurrent().length() * sizeof("a");
-	//	cout << lsystems[i].getName() << ": " << l << endl;
-	//	sum += l;
-	//}
-	//cout << "Sum: " << sum << endl;
-	//getchar();
 	return 0;
 }

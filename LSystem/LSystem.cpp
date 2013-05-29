@@ -32,9 +32,8 @@ string LSystem::apply_rules(string state, const vector<Rule> rules) {
 		Rule match;
 		// Check for a matching rule by iterating over all rules
 		for(auto jt = rules.begin(); jt != rules.end(); ++jt) {
-			Rule r = (Rule) *jt;
-			if(r.getLHS() == current) {
-				match = r;
+			if(jt->getLHS() == current) {
+				match = *jt;
 			}
 		}
 		// If there was no match, append the current character

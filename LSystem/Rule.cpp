@@ -9,18 +9,18 @@ Rule::Rule() {
 	rhs = "\0";
 }
 
-char Rule::getLHS() {
+char Rule::getLHS() const {
 	return lhs;
 }
 
-string Rule::getRHS() {
+string Rule::getRHS() const {
 	return rhs;
 }
 
-void Rule::setLHS(char c) {
+void Rule::setLHS(const char c) {
 	lhs = c;
 }
 
-void Rule::setRHS(string s) {
+void Rule::setRHS(const string s) {
 	rhs = s;
 }

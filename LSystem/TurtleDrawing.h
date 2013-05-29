@@ -16,8 +16,8 @@ class TurtleDrawing {
 	stack<double> stack;
 	sf::Color drawColor;
 public:
-	TurtleDrawing(int xSize, int ySize, int startX, int startY);
-	TurtleDrawing(int xSize, int ySize);
+	explicit TurtleDrawing(int xSize, int ySize, int startX, int startY);
+	explicit TurtleDrawing(int xSize, int ySize);
 	TurtleDrawing();
 
 	void forward(float distance);

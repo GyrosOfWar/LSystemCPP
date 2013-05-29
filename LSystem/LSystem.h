@@ -18,7 +18,7 @@ class LSystem {
 	string name;
 	sf::Color colorList[3];
 public:
-	LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize);
+	explicit LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize);
 	void step();
 	sf::VertexArray draw();
 	void clear();

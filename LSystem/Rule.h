@@ -8,8 +8,8 @@ class Rule {
 public:
 	Rule(char lhs, string rhs);
 	Rule();
-	char getLHS();
-	string getRHS();
-	void setLHS(char c);
-	void setRHS(string s);
+	char getLHS() const;
+	string getRHS() const;
+	void setLHS(const char c);
+	void setRHS(const string s);
 };
