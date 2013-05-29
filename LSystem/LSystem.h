@@ -16,15 +16,16 @@ class LSystem {
 	int xSize;
 	int ySize;
 	string name;
-	sf::Color colorList[4];
+	sf::Color colorList[3];
 public:
 	LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize);
 	void step();
 	sf::VertexArray draw();
+	void clear();
+
 	TurtleDrawing getDrawing();
 	void setIterations(int);
 	int getIterations();
-	void clear();
 	string getName();
 	string getCurrent();
 private: 

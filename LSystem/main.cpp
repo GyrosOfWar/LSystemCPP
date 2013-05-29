@@ -1,5 +1,5 @@
 //
-// main.cpp : Defines the entry point for the console application.
+// main.cpp : Defines the entry point for the application.
 //
 
 #include "stdafx.h"
@@ -44,24 +44,24 @@ void createLSystems() {
 
 	vector<Rule> koch_rules;
 	koch_rules.push_back(Rule('F', "F+F-F-F+F"));
-	lsystems.push_back(LSystem("Koch Curve", koch_rules, "F", Pi / 2.0, 4, 15, xSize, ySize));
+	lsystems.push_back(LSystem("Koch Curve", koch_rules, "F", Pi / 2.0, 4, 10, xSize, ySize));
 	lsystems[1].step();
 
 	vector<Rule> plant_rules;
 	plant_rules.push_back(Rule('F', "C0FF-[C1-F+F+F]+[C2+F-F-F]"));
-	lsystems.push_back(LSystem("Fractal Plant", plant_rules, "F", toRadians(22), 4, 5, xSize, ySize));
+	lsystems.push_back(LSystem("Fractal Plant", plant_rules, "F", toRadians(22), 4, 10, xSize, ySize));
 	lsystems[2].step();
 
 	vector<Rule> sierpinski_rules;
 	sierpinski_rules.push_back(Rule('F', "F-G+F+G-F"));
 	sierpinski_rules.push_back(Rule('G', "GG"));
-	lsystems.push_back(LSystem("Sierpinski Triangle", sierpinski_rules, "F-G-G", toRadians(120), 6, 5, xSize, ySize));
+	lsystems.push_back(LSystem("Sierpinski Triangle", sierpinski_rules, "F-G-G", toRadians(120), 6, 10, xSize, ySize));
 	lsystems[3].step();
 
 	vector<Rule> screen_filling_curve_rules;
 	screen_filling_curve_rules.push_back(Rule('X', "-YF+XFX+FY-"));
 	screen_filling_curve_rules.push_back(Rule('Y', "+XF-YFY-FX+"));
-	lsystems.push_back(LSystem("Screen Filling Curve", screen_filling_curve_rules, "X", toRadians(90), 6, 5, xSize, ySize));
+	lsystems.push_back(LSystem("Screen Filling Curve", screen_filling_curve_rules, "X", toRadians(90), 6, 10, xSize, ySize));
 	lsystems[4].step();
 }
 

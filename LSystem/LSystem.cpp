@@ -1,8 +1,16 @@
 #include "stdafx.h"
 #include "LSystem.h"
 
-LSystem::LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int xSize, int ySize):
-	name(name), rules(rules), axiom(axiom), angle(angle), iterations(iterations), distance(distance), xSize(xSize), ySize(ySize) {
+LSystem::LSystem(string name, vector<Rule> rules, string axiom,
+				 double angle, int iterations, int distance, int xSize, int ySize):
+	name(name),
+	rules(rules),
+	axiom(axiom),
+	angle(angle),
+	iterations(iterations),
+	distance(distance),
+	xSize(xSize),
+	ySize(ySize) {
 		current = axiom;
 		td = TurtleDrawing(xSize, ySize);
 		colorList[0] = sf::Color(140, 80, 60, (int) (0.75 * 255.0));
