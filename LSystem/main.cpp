@@ -71,49 +71,53 @@ void redraw(int selected) {
 }
 
 void handleEvents(sf::Event& event, sf::RenderWindow& window) {
+	sf::Vector2i mousePos;
+	int mouseWheel;
 	switch(event.type) {
-	case sf::Event::Closed: 
-		window.close();
-		break;
-	case sf::Event::MouseButtonPressed:
-		mouseDrag = true;
-		break;
-	case sf::Event::MouseButtonReleased:
-		mouseDrag = false;
-		break;
-	case sf::Event::MouseMoved:
-		if(mouseDrag) {
-			sf::Vector2i pos = sf::Mouse::getPosition(window);
-			sf::Vector2i delta = pos - oldMousePos;
-			oldMousePos = pos;
-			transform.translate(sf::Vector2f(delta.x / scale, delta.y / scale));
-		}
-	case sf::Event::KeyPressed:
-		int newIterCount;
-		switch(event.key.code) {
-
-		case sf::Keyboard::W:
-			selectedLSystem = (selectedLSystem + 1) % NumLSystems;
+		case sf::Event::Closed: 
+			window.close();
 			break;
-		case sf::Keyboard::S:
-			selectedLSystem--;
-			if(selectedLSystem < 0)
-				selectedLSystem = NumLSystems - 1;
+		case sf::Event::MouseButtonPressed:
+			mouseDrag = true;
 			break;
-		case sf::Keyboard::O:
-			newIterCount = lsystems[selectedLSystem].getIterations() - 1;
-			lsystems[selectedLSystem].setIterations(newIterCount > 0 ? newIterCount : 1);
-			redraw(selectedLSystem);
+		case sf::Event::MouseButtonReleased:
+			mouseDrag = false;
 			break;
-		case sf::Keyboard::P:
-			newIterCount = lsystems[selectedLSystem].getIterations() + 1;
-			lsystems[selectedLSystem].setIterations(newIterCount);
-			redraw(selectedLSystem);
-			break;
+		case sf::Event::MouseMoved:
+			if(mouseDrag) {
+				sf::Vector2i pos = sf::Mouse::getPosition(window);
+				sf::Vector2i delta = pos - oldMousePos;
+				oldMousePos = pos;
+				transform.translate(sf::Vector2f(delta.x / scale, delta.y / scale));
+			}
+		case sf::Event::KeyPressed:
+			int newIterCount;
+			switch(event.key.code) {
+				case sf::Keyboard::W:
+					selectedLSystem = (selectedLSystem + 1) % NumLSystems;
+					break;
+				case sf::Keyboard::S:
+					selectedLSystem--;
+					if(selectedLSystem < 0)
+						selectedLSystem = NumLSystems - 1;
+					break;
+				case sf::Keyboard::O:
+					newIterCount = lsystems[selectedLSystem].getIterations() - 1;
+					lsystems[selectedLSystem].setIterations(newIterCount > 0 ? newIterCount : 1);
+					redraw(selectedLSystem);
+					break;
+				case sf::Keyboard::P:
+					newIterCount = lsystems[selectedLSystem].getIterations() + 1;
+					lsystems[selectedLSystem].setIterations(newIterCount);
+					redraw(selectedLSystem);
+					break;
+				default:
+					break;
 		}
 		break;
 	case sf::Event::MouseWheelMoved:
-		int mouseWheel = event.mouseWheel.delta;
+		mouseWheel = event.mouseWheel.delta;
+		mousePos = sf::Mouse::getPosition(window);
 		if(mouseWheel == -1) {
 			transform.scale(1.1f, 1.1f);
 			scale *= 1.1f;
@@ -122,6 +126,8 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 			transform.scale(0.9f, 0.9f);
 			scale *= 0.9f;
 		}
+		break;
+	default:
 		break;
 	}
 }

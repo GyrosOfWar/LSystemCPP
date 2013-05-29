@@ -72,7 +72,7 @@ sf::VertexArray LSystem::draw() {
 		case 'C':
 			color = *(++it) - '0';
 			td.setColor(colorList[color]);
-			std::cout << (int) colorList[color].r << ", " << (int) colorList[color].g << ", " << (int) colorList[color].b << (int) colorList[color].a << std::endl;
+			//std::cout << (int) colorList[color].r << ", " << (int) colorList[color].g << ", " << (int) colorList[color].b << (int) colorList[color].a << std::endl;
 			break;
 		case 'X':
 			break;
