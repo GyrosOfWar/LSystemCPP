@@ -13,8 +13,6 @@ class LSystem {
 	int iterations;
 	int distance;
 	TurtleDrawing td;
-	int xSize;
-	int ySize;
 	string name;
 	sf::Color colorList[3];
 public:
@@ -29,5 +27,5 @@ public:
 	string getName();
 	string getCurrent();
 private: 
-	string apply_rules(string state, vector<Rule> rules);
+	string apply_rules(const string state, const vector<Rule>& rules);
 };

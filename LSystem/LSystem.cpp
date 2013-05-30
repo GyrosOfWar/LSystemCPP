@@ -8,9 +8,7 @@ LSystem::LSystem(string name, vector<Rule> rules, string axiom,
 	axiom(axiom),
 	angle(angle),
 	iterations(iterations),
-	distance(distance),
-	xSize(xSize),
-	ySize(ySize) {
+	distance(distance) {
 		current = axiom;
 		td = TurtleDrawing(xSize, ySize);
 		colorList[0] = sf::Color(140, 80, 60, (int) (0.75 * 255.0));
@@ -24,7 +22,7 @@ void LSystem::step() {
 	}
 }
 // Applies a set of rules to a given state string and returns the new state.
-string LSystem::apply_rules(string state, const vector<Rule> rules) {
+string LSystem::apply_rules(const string state, const vector<Rule>& rules) {
 	string result;
 	// Iterate over the state string
 	for(auto it = state.begin(); it != state.end(); ++it) {
