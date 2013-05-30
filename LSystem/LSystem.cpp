@@ -50,7 +50,8 @@ sf::VertexArray LSystem::draw() {
 	// Iterate over the state string and perform an action based
 	// on the current character
 	for(auto it = current.begin(); it != current.end(); ++it) {
-		float x, y, stackAngle = 0.0f;
+		float stackAngle = 0.0f;
+		double* vals = NULL;
 		char c = (char) *it;
 		int color;
 		switch(c) {
@@ -70,16 +71,13 @@ sf::VertexArray LSystem::draw() {
 			break;
 		// [ pushes the current position and angle to the stack
 		case '[':
-			td.pushStack(td.getAngle());
-			td.pushStack(td.getPosition().x);
-			td.pushStack(td.getPosition().y);
+			td.pushStack();
 			break;
 		// ] gets the position and angle from the stack and delets it (pop())
 		case ']':
-			y = td.popStack();
-			x = td.popStack();
-			stackAngle = td.popStack();
-			td.moveTo(x, y);
+			vals = td.popStack();
+			stackAngle = vals[2];
+			td.moveTo(vals[1], vals[0]);
 			td.setAngle(stackAngle);
 			break;
 		// Colors are of the form

@@ -48,14 +48,22 @@ void TurtleDrawing::moveTo(float x, float y) {
 	position.y = y;
 }
 
-void TurtleDrawing::pushStack(double d) {
-	stack.push(d);
+// Pushes the current position and angle to the stack
+void TurtleDrawing::pushStack() {
+	stack.push(angle);
+	stack.push(position.x);
+	stack.push(position.y);
 }
 
-double TurtleDrawing::popStack() { 
-	double value = stack.top();
+double* TurtleDrawing::popStack() { 
+	double value[3];
+	value[0] = stack.top();
 	stack.pop();	
-	return value;
+	value[1] = stack.top();
+	stack.pop();
+	value[2] = stack.top();
+	stack.pop();
+	return &value[0];
 }
 
 sf::VertexArray TurtleDrawing::getVertices() {
