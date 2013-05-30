@@ -71,7 +71,7 @@ void redraw(int selected) {
 	verts[selected] = lsystems[selected].draw();
 }
 // Handles inputs from mouse and keyboard
-void handleEvents(sf::Event& event, sf::RenderWindow& window) {
+void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 	sf::Vector2i mousePos;
 	int mouseWheel = 0;
 	switch(event.type) {
@@ -89,7 +89,8 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 			sf::Vector2i pos = sf::Mouse::getPosition(window);
 			sf::Vector2i delta = pos - oldMousePos;
 			oldMousePos = pos;
-			transform.translate(sf::Vector2f(delta.x / scale, delta.y / scale));
+			//transform.translate(sf::Vector2f(delta.x / scale, delta.y / scale));
+			view.move(delta.x / scale, delta.y / scale);
 		}
 		break;
 	case sf::Event::KeyPressed:
@@ -144,6 +145,9 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window) {
 int main() {
 	createLSystems();
 	sf::RenderWindow window(sf::VideoMode(xSize, ySize), "Window");
+	window.setFramerateLimit(60);
+	sf::View fixed = window.getView();
+	sf::View standard = fixed;
 	// Build vector of VertexArrays that hold the vertices for every L-System
 	for(unsigned int i = 0; i < lsystems.size(); i++) {
 		verts.push_back(lsystems[i].draw());
@@ -171,12 +175,13 @@ int main() {
 	while(window.isOpen()) {
 		sf::Event event;
 		while(window.pollEvent(event)) {
-			handleEvents(event, window);
+			handleEvents(event, window, standard);
 		}
 		lSystemName.setString(lsystems[selectedLSystem].getName());
 		textWidth = lSystemName.getGlobalBounds().width;
 		lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
 		window.clear();
+		window.setView(standard);
 		window.draw(verts[selectedLSystem], transform);
 		window.draw(lSystemName);
 		window.display();

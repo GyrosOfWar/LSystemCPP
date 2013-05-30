@@ -25,7 +25,7 @@ public:
 	void angleMinus(double);
 	void moveTo(float, float);
 	void pushStack();
-	double* popStack();
+	void popStack();
 
 	sf::VertexArray getVertices();
 	sf::Vector2f getPosition();

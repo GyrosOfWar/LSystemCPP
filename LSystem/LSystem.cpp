@@ -75,10 +75,7 @@ sf::VertexArray LSystem::draw() {
 			break;
 		// ] gets the position and angle from the stack and delets it (pop())
 		case ']':
-			vals = td.popStack();
-			stackAngle = vals[2];
-			td.moveTo(vals[1], vals[0]);
-			td.setAngle(stackAngle);
+			td.popStack();
 			break;
 		// Colors are of the form
 		// C{0, 2}
@@ -90,15 +87,10 @@ sf::VertexArray LSystem::draw() {
 			td.setColor(colorList[color]);
 			break;
 		case 'X':
-			break;
 		case 'Y':
-			break;
 		case '0':
-			break;
 		case '1':
-			break;
 		case '2':
-			break;
 		case '3':
 			break;
 		// TODO throw an actual exception
