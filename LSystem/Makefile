@@ -1,5 +1,5 @@
 CC = g++
-CPPFLAGS = -Wall -std=c++11
+CPPFLAGS = -Wall -std=c++11 -g
 
 main.o: main.cpp
 	$(CC) $(CPPFLAGS) -c main.cpp
@@ -17,7 +17,7 @@ stdafx.o: stdafx.cpp stdafx.h
 	$(CC) $(CPPFLAGS) -c stdafx.cpp
 
 all: main.o TurtleDrawing.o Rule.o LSystem.o stdafx.o
-	$(CC) -g main.o TurtleDrawing.o Rule.o stdafx.o LSystem.o -o LSystem.app -lsfml-graphics -lsfml-window -lsfml-system
+	$(CC) main.o TurtleDrawing.o Rule.o stdafx.o LSystem.o -o LSystem.app -lsfml-graphics -lsfml-window -lsfml-system
 
 clean: 
 	rm -f *.o LSystem.app
