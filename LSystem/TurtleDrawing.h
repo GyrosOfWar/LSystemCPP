@@ -1,11 +1,13 @@
 #pragma once
 
 #include "stdafx.h"
+#ifdef WIN32
 #include "SFML\Graphics.hpp"
+#else
+#include "SFML/Graphics.hpp"
+#endif
 #include <stack>
 #include <iostream>
-
-using std::stack;
 
 class TurtleDrawing { 
 	sf::Vector2f position;
@@ -13,7 +15,7 @@ class TurtleDrawing {
 	int ySize;
 	double angle;
 	sf::VertexArray points;
-	stack<double> stack;
+	std::stack<double> stack;
 	sf::Color drawColor;
 public:
 	explicit TurtleDrawing(int xSize, int ySize, int startX, int startY);
