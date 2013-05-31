@@ -18,7 +18,6 @@ const static double Pi = 3.141592653589793;
 const static int NumLSystems = 5;
 
 // Globals
-sf::Transform transform;
 sf::Vector2i oldMousePos(0, 0);
 bool mouseDrag = false;
 float scale = 1.0f;
@@ -89,6 +88,7 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 			sf::Vector2i pos = sf::Mouse::getPosition(window);
 			sf::Vector2f delta = window.mapPixelToCoords(oldMousePos) - window.mapPixelToCoords(pos);
 			oldMousePos = pos;
+			// FIXME Scaling doesn't work
 			view.move(delta.x / scale, delta.y / scale);
 		}
 		break;
@@ -127,12 +127,12 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 		mousePos = sf::Mouse::getPosition(window);
 		// -1 delta means scrolling upwards = zooming in
 		if(mouseWheel == -1) {
-			transform.scale(1.1f, 1.1f);
+			view.zoom(1.1f);
 			scale *= 1.1f;
 		}
 		// 1 delta is scrolling downwards = zooming out
 		if(mouseWheel == 1) {
-			transform.scale(0.9f, 0.9f);
+			view.zoom(0.9f);
 			scale *= 0.9f;
 		}
 		break;
@@ -182,7 +182,7 @@ int main() {
 		textWidth = lSystemName.getGlobalBounds().width;
 		lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
 		window.clear();
-		window.draw(verts[selectedLSystem], transform);
+		window.draw(verts[selectedLSystem]);
 		window.draw(lSystemName);
 		window.setView(standard);
 		window.display();
