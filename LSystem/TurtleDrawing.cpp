@@ -4,7 +4,7 @@
 using std::cout;
 
 TurtleDrawing::TurtleDrawing(int xs, int ys): xSize(xs), ySize(ys) {
-	position = sf::Vector2f(xs/2, ys/2);
+	position = sf::Vector2f(0, 0);
 	angle = 0.0;
 	points = sf::VertexArray(sf::PrimitiveType::Lines);
 	drawColor = sf::Color(255, 255, 255, 255);

@@ -87,13 +87,8 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 	case sf::Event::MouseMoved:
 		if(mouseDrag) {
 			sf::Vector2i pos = sf::Mouse::getPosition(window);
-			sf::Vector2i delta = window.mapCoordsToPixel(sf::Vector2f(oldMousePos.x, oldMousePos.y), view) - 
-			window.mapCoordsToPixel(sf::Vector2f(pos.x, pos.y), view);
+			sf::Vector2f delta = window.mapPixelToCoords(oldMousePos) - window.mapPixelToCoords(pos);
 			oldMousePos = pos;
-			//sf::Vector2f map_delta = App.ConvertCoords(window_now.x, window_now.y)
-          	// - App.ConvertCoords(window_last_click.x, window_last_click.y);
-
-			//transform.translate(sf::Vector2f(delta.x / scale, delta.y / scale));
 			view.move(delta.x / scale, delta.y / scale);
 		}
 		break;
@@ -151,7 +146,9 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(xSize, ySize), "Window");
 	window.setFramerateLimit(60);
 	sf::View fixed = window.getView();
-	sf::View standard = fixed;
+	sf::View standard(fixed.getCenter(), fixed.getSize());
+	standard.setCenter(xSize / 2.0f, ySize / 2.0f);
+
 	// Build vector of VertexArrays that hold the vertices for every L-System
 	for(unsigned int i = 0; i < lsystems.size(); i++) {
 		verts.push_back(lsystems[i].draw());
@@ -185,9 +182,9 @@ int main() {
 		textWidth = lSystemName.getGlobalBounds().width;
 		lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
 		window.clear();
-		window.setView(standard);
 		window.draw(verts[selectedLSystem], transform);
 		window.draw(lSystemName);
+		window.setView(standard);
 		window.display();
 	}
 	return EXIT_SUCCESS;
