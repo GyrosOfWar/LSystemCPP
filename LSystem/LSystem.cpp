@@ -2,7 +2,7 @@
 #include "LSystem.h"
 
 LSystem::LSystem(string name, vector<Rule> rules, string axiom,
-				 double angle, int iterations, int distance, int xSize, int ySize):
+				 double angle, int iterations, int distance, int startX, int startY):
 	name(name),
 	rules(rules),
 	axiom(axiom),
@@ -10,7 +10,7 @@ LSystem::LSystem(string name, vector<Rule> rules, string axiom,
 	iterations(iterations),
 	distance(distance) {
 		current = axiom;
-		td = TurtleDrawing(xSize, ySize);
+		td = TurtleDrawing(startX, startY);
 		colorList[0] = sf::Color(140, 80, 60, (int) (0.75 * 255.0));
 		colorList[1] = sf::Color(24, 180, 24, (int) (0.75 * 255.0));
 		colorList[2] = sf::Color(64, 255, 64, 128);

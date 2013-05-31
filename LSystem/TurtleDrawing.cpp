@@ -3,23 +3,14 @@
 
 using std::cout;
 
-TurtleDrawing::TurtleDrawing(int xs, int ys): xSize(xs), ySize(ys) {
-	position = sf::Vector2f(0, 0);
-	angle = 0.0;
-	points = sf::VertexArray(sf::PrimitiveType::Lines);
-	drawColor = sf::Color(255, 255, 255, 255);
-}
-
 TurtleDrawing::TurtleDrawing() {
-	xSize = 800;
-	ySize = 600;
 	position = sf::Vector2f(0, 0);
 	angle = 0.0;
 	points = sf::VertexArray(sf::PrimitiveType::Lines);
 	drawColor = sf::Color(255, 255, 255, 255);
 }
 
-TurtleDrawing::TurtleDrawing(int xSize, int ySize, int startX, int startY): xSize(xSize), ySize(ySize) {
+TurtleDrawing::TurtleDrawing(int startX, int startY) {
 	position = sf::Vector2f(startX, startY);
 	angle = 0.0;
 	points = sf::VertexArray(sf::PrimitiveType::Lines);

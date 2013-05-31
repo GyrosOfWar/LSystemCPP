@@ -11,15 +11,12 @@
 
 class TurtleDrawing { 
 	sf::Vector2f position;
-	int xSize;
-	int ySize;
 	double angle;
 	sf::VertexArray points;
 	std::stack<double> stack;
 	sf::Color drawColor;
 public:
-	explicit TurtleDrawing(int xSize, int ySize, int startX, int startY);
-	explicit TurtleDrawing(int xSize, int ySize);
+	explicit TurtleDrawing(int startX, int startY);
 	TurtleDrawing();
 
 	void forward(float distance);

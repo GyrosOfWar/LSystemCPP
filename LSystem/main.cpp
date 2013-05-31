@@ -16,6 +16,8 @@ const static int xSize = 1280;
 const static int ySize = 800;
 const static double Pi = 3.141592653589793;
 const static int NumLSystems = 5;
+const static float ZoomInFactor = 1.2f;
+const static float ZoomOutFactor = 0.8f;
 
 // Globals
 sf::Vector2i oldMousePos(0, 0);
@@ -24,6 +26,7 @@ float scale = 1.0f;
 std::vector<LSystem> lsystems;
 int selectedLSystem = 0;
 vector<sf::VertexArray> verts;
+sf::Texture cross;
 
 double toRadians(double deg) {
 	return deg * (Pi / 180.0);
@@ -35,33 +38,33 @@ double toDegrees(double rad) {
 
 // Fills the lsystems-Vector with some L-Systems.
 void createLSystems() {
-	vector<Rule> dragon_curve_rules;
-	dragon_curve_rules.push_back(Rule('X', "X+YF"));
-	dragon_curve_rules.push_back(Rule('Y', "FX-Y"));
-	lsystems.push_back(LSystem("Dragon Curve", dragon_curve_rules, "FX", Pi / 2.0, 11, 10, xSize, ySize));
-	lsystems[0].step();
+    vector<Rule> dragon_curve_rules;
+    dragon_curve_rules.push_back(Rule('X', "X+YF"));
+    dragon_curve_rules.push_back(Rule('Y', "FX-Y"));
+    lsystems.push_back(LSystem("Dragon Curve", dragon_curve_rules, "FX", Pi / 2.0, 11, 10, 0, 0));
+    lsystems[0].step();
 
-	vector<Rule> koch_rules;
-	koch_rules.push_back(Rule('F', "F+F-F-F+F"));
-	lsystems.push_back(LSystem("Koch Curve", koch_rules, "F", Pi / 2.0, 4, 10, xSize, ySize));
-	lsystems[1].step();
+    vector<Rule> koch_rules;
+    koch_rules.push_back(Rule('F', "F+F-F-F+F"));
+    lsystems.push_back(LSystem("Koch Curve", koch_rules, "F", Pi / 2.0, 4, 10, 0, 0));
+    lsystems[1].step();
 
-	vector<Rule> plant_rules;
-	plant_rules.push_back(Rule('F', "C0FF-[C1-F+F+F]+[C2+F-F-F]"));
-	lsystems.push_back(LSystem("Fractal Plant", plant_rules, "F", toRadians(22), 4, 10, xSize, ySize));
-	lsystems[2].step();
+    vector<Rule> plant_rules;
+    plant_rules.push_back(Rule('F', "C0FF-[C1-F+F+F]+[C2+F-F-F]"));
+    lsystems.push_back(LSystem("Fractal Plant", plant_rules, "F", toRadians(22), 4, 10, 0, 0));
+    lsystems[2].step();
 
-	vector<Rule> sierpinski_rules;
-	sierpinski_rules.push_back(Rule('F', "F-G+F+G-F"));
-	sierpinski_rules.push_back(Rule('G', "GG"));
-	lsystems.push_back(LSystem("Sierpinski Triangle", sierpinski_rules, "F-G-G", toRadians(120), 6, 10, xSize, ySize));
-	lsystems[3].step();
+    vector<Rule> sierpinski_rules;
+    sierpinski_rules.push_back(Rule('F', "F-G+F+G-F"));
+    sierpinski_rules.push_back(Rule('G', "GG"));
+    lsystems.push_back(LSystem("Sierpinski Triangle", sierpinski_rules, "F-G-G", toRadians(120), 6, 10, 0, 0));
+    lsystems[3].step();
 
-	vector<Rule> screen_filling_curve_rules;
-	screen_filling_curve_rules.push_back(Rule('X', "-YF+XFX+FY-"));
-	screen_filling_curve_rules.push_back(Rule('Y', "+XF-YFY-FX+"));
-	lsystems.push_back(LSystem("Screen Filling Curve", screen_filling_curve_rules, "X", toRadians(90), 6, 10, xSize, ySize));
-	lsystems[4].step();
+    vector<Rule> screen_filling_curve_rules;
+    screen_filling_curve_rules.push_back(Rule('X', "-YF+XFX+FY-"));
+    screen_filling_curve_rules.push_back(Rule('Y', "+XF-YFY-FX+"));
+    lsystems.push_back(LSystem("Screen Filling Curve", screen_filling_curve_rules, "X", toRadians(90), 6, 10, 0, 0));
+    lsystems[4].step();
 }
 
 void redraw(int selected) {
@@ -86,10 +89,11 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 	case sf::Event::MouseMoved:
 		if(mouseDrag) {
 			sf::Vector2i pos = sf::Mouse::getPosition(window);
-			sf::Vector2f delta = window.mapPixelToCoords(oldMousePos) - window.mapPixelToCoords(pos);
+			//sf::Vector2f delta = window.mapPixelToCoords(oldMousePos) - window.mapPixelToCoords(pos);
+			sf::Vector2f delta(oldMousePos.x - pos.x, oldMousePos.y - pos.y);
 			oldMousePos = pos;
 			// FIXME Scaling doesn't work
-			view.move(delta.x / scale, delta.y / scale);
+			view.move(delta / scale); 
 		}
 		break;
 	case sf::Event::KeyPressed:
@@ -111,7 +115,7 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 			lsystems[selectedLSystem].setIterations(newIterCount > 0 ? newIterCount : 1);
 			redraw(selectedLSystem);
 			break;
-			// P decreases the iteration counter and issues a redraw as well
+		// P decreases the iteration counter and issues a redraw as well
 		case sf::Keyboard::P:
 			newIterCount = lsystems[selectedLSystem].getIterations() + 1;
 			lsystems[selectedLSystem].setIterations(newIterCount);
@@ -121,19 +125,19 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 			break;
 		}
 		break;
-		// Mouse wheel is used for zooming in and out
+	// Mouse wheel is used for zooming in and out
 	case sf::Event::MouseWheelMoved:
 		mouseWheel = event.mouseWheel.delta;
 		mousePos = sf::Mouse::getPosition(window);
 		// -1 delta means scrolling upwards = zooming in
 		if(mouseWheel == -1) {
-			view.zoom(1.1f);
-			scale *= 1.1f;
+			view.zoom(ZoomInFactor);
+			scale *= ZoomInFactor;
 		}
 		// 1 delta is scrolling downwards = zooming out
 		if(mouseWheel == 1) {
-			view.zoom(0.9f);
-			scale *= 0.9f;
+			view.zoom(ZoomOutFactor);
+			scale *= ZoomOutFactor;
 		}
 		break;
 	default:
