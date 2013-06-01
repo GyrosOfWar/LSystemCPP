@@ -13,3 +13,9 @@ Make sure you have exported `LD_LIBRARY_PATH`
 There is a Makefile in the LSystem/ directory of the project path
 `make all`
 `./LSystem.app`
+
+## How to use
+Press `W` and `S` to cycle through available L-Systems.
+Drag with the mouse to move around.
+You can zoom in and out with the mouse wheel.
+`O` and `P` can be used to control the evolution of the curve (number of iterations)
