@@ -50,11 +50,8 @@ sf::VertexArray LSystem::draw() {
 	// Iterate over the state string and perform an action based
 	// on the current character
 	for(auto it = current.begin(); it != current.end(); ++it) {
-		float stackAngle = 0.0f;
-		double* vals = NULL;
-		char c = (char) *it;
 		int color;
-		switch(c) {
+		switch(*it) {
 		// F and G move the turtle forward
 		case 'F':
 			td.forward(distance);

@@ -72,6 +72,55 @@ void redraw(int selected) {
 	lsystems[selected].step();
 	verts[selected] = lsystems[selected].draw();
 }
+
+void handleKeyboard(sf::Keyboard::Key keycode, sf::View& view) {
+	int newIterCount;
+	switch(keycode) {
+		// W and S cycle through all available L-Systems
+	case sf::Keyboard::W:
+		selectedLSystem = (selectedLSystem + 1) % NumLSystems;
+		break;
+	case sf::Keyboard::S:
+		selectedLSystem--;
+		if(selectedLSystem < 0)
+			selectedLSystem = NumLSystems - 1;
+		break;
+		// O increaases the iteration counter and issues a redraw
+	case sf::Keyboard::O:
+		newIterCount = lsystems[selectedLSystem].getIterations() - 1;
+		// Make sure the iteration count doesn't go below 1
+		lsystems[selectedLSystem].setIterations(newIterCount > 0 ? newIterCount : 1);
+		redraw(selectedLSystem);
+		break;
+	// P decreases the iteration counter and issues a redraw as well
+	case sf::Keyboard::P:
+		newIterCount = lsystems[selectedLSystem].getIterations() + 1;
+		lsystems[selectedLSystem].setIterations(newIterCount);
+		redraw(selectedLSystem);
+		break;
+	case sf::Keyboard::G:
+		if(grayscale == 0)
+			grayscale = 1;
+		else
+			grayscale = 0;
+		break;
+	case sf::Keyboard::Up:
+		view.move(0, 8.0f);
+		break;
+	case sf::Keyboard::Down:
+		view.move(0, -8.0f);
+		break;
+	case sf::Keyboard::Left:
+		view.move(8.0f, 0);
+		break;
+	case sf::Keyboard::Right:
+		view.move(-8.0f, 0);
+		break;
+	default:
+		break;
+	}
+}
+
 // Handles inputs from mouse and keyboard
 void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 	sf::Vector2i mousePos;
@@ -89,47 +138,14 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 	case sf::Event::MouseMoved:
 		if(mouseDrag) {
 			sf::Vector2i pos = sf::Mouse::getPosition(window);
-			//sf::Vector2f delta = window.mapPixelToCoords(oldMousePos) - window.mapPixelToCoords(pos);
 			sf::Vector2f delta(oldMousePos.x - pos.x, oldMousePos.y - pos.y);
+			delta *= scale;
 			oldMousePos = pos;
-			// FIXME Scaling doesn't work
-			view.move(delta / scale); 
+			view.move(delta); 
 		}
 		break;
 	case sf::Event::KeyPressed:
-		int newIterCount;
-		switch(event.key.code) {
-			// W and S cycle through all available L-Systems
-		case sf::Keyboard::W:
-			selectedLSystem = (selectedLSystem + 1) % NumLSystems;
-			break;
-		case sf::Keyboard::S:
-			selectedLSystem--;
-			if(selectedLSystem < 0)
-				selectedLSystem = NumLSystems - 1;
-			break;
-			// O increaases the iteration counter and issues a redraw
-		case sf::Keyboard::O:
-			newIterCount = lsystems[selectedLSystem].getIterations() - 1;
-			// Make sure the iteration count doesn't go below 1
-			lsystems[selectedLSystem].setIterations(newIterCount > 0 ? newIterCount : 1);
-			redraw(selectedLSystem);
-			break;
-		// P decreases the iteration counter and issues a redraw as well
-		case sf::Keyboard::P:
-			newIterCount = lsystems[selectedLSystem].getIterations() + 1;
-			lsystems[selectedLSystem].setIterations(newIterCount);
-			redraw(selectedLSystem);
-			break;
-		case sf::Keyboard::G:
-			if(grayscale == 0)
-				grayscale = 1;
-			else
-				grayscale = 0;
-			break;
-		default:
-			break;
-		}
+		handleKeyboard(event.key.code, view);
 		break;
 	// Mouse wheel is used for zooming in and out
 	case sf::Event::MouseWheelMoved:
