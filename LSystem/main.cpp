@@ -26,7 +26,7 @@ float scale = 1.0f;
 std::vector<LSystem> lsystems;
 int selectedLSystem = 0;
 vector<sf::VertexArray> verts;
-sf::Texture cross;
+float grayscale = 0;
 
 double toRadians(double deg) {
 	return deg * (Pi / 180.0);
@@ -121,6 +121,12 @@ void handleEvents(sf::Event& event, sf::RenderWindow& window, sf::View& view) {
 			lsystems[selectedLSystem].setIterations(newIterCount);
 			redraw(selectedLSystem);
 			break;
+		case sf::Keyboard::G:
+			if(grayscale == 0)
+				grayscale = 1;
+			else
+				grayscale = 0;
+			break;
 		default:
 			break;
 		}
@@ -157,6 +163,14 @@ int main() {
 	for(unsigned int i = 0; i < lsystems.size(); i++) {
 		verts.push_back(lsystems[i].draw());
 	}
+	sf::Shader shader;
+	if(sf::Shader::isAvailable()) {
+		if(!shader.loadFromFile("vertex_shader.glsl", "fragment_shader.glsl")) {
+			perror("Error loading shader!");
+			return -1;
+		}
+		sf::Shader::bind(&shader);
+	}
 
 	// Load font
 	sf::Font arial;
@@ -186,7 +200,8 @@ int main() {
 		textWidth = lSystemName.getGlobalBounds().width;
 		lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
 		window.clear();
-		window.draw(verts[selectedLSystem]);
+		shader.setParameter("grayscale", grayscale);
+		window.draw(verts[selectedLSystem], &shader);
 		window.draw(lSystemName);
 		window.setView(standard);
 		window.display();
