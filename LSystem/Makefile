@@ -1,6 +1,8 @@
 CC = g++
 CPPFLAGS = -Wall -std=c++11 -g
 
+default: all
+
 main.o: main.cpp
 	$(CC) $(CPPFLAGS) -c main.cpp
 
