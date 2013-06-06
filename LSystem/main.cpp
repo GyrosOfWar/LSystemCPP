@@ -15,7 +15,7 @@ using std::cout;
 const static int xSize = 1280;
 const static int ySize = 800;
 const static double Pi = 3.141592653589793;
-const static int NumLSystems = 5;
+const static int NumLSystems = 6;
 const static float ZoomInFactor = 1.2f;
 const static float ZoomOutFactor = 0.8f;
 
@@ -65,12 +65,32 @@ void createLSystems() {
     screen_filling_curve_rules.push_back(Rule('Y', "+XF-YFY-FX+"));
     lsystems.push_back(LSystem("Screen Filling Curve", screen_filling_curve_rules, "X", toRadians(90), 6, 10, 0, 0));
     lsystems[4].step();
+
+	vector<Rule> stochastic_plant_rules;
+	stochastic_plant_rules.push_back(Rule('F', "F[+F]F[-F]F", 1.0 / 3.0));
+	stochastic_plant_rules.push_back(Rule('F', "F[+F]F", 1.0 / 3.0));
+	stochastic_plant_rules.push_back(Rule('F', "F[-F]F", 1.0 / 3.0));
+	lsystems.push_back(LSystem("Stochastic Plant", stochastic_plant_rules, "F", toRadians(22), 5, 10, 0, 0));
+	lsystems[5].step();
 }
+int calcSize() {
+	int vecSize = sizeof(sf::Vertex);
+	int size = 0;
+	for(auto it = verts.begin(); it != verts.end(); ++it) {
+		sf::VertexArray v = (*it);
+		for(int i = 0; i < v.getVertexCount(); ++i) {
+			size += sizeof(v[i]);
+		}
+	}
+	return size;
+}
+
 
 void redraw(int selected) {
 	lsystems[selected].clear();
 	lsystems[selected].step();
 	verts[selected] = lsystems[selected].draw();
+	cout << "vecSize = " << calcSize() << endl;
 }
 
 void handleKeyboard(sf::Keyboard::Key keycode, sf::View& view) {
@@ -179,11 +199,12 @@ int main() {
 	for(unsigned int i = 0; i < lsystems.size(); i++) {
 		verts.push_back(lsystems[i].draw());
 	}
+	// Load shader.
 	sf::Shader shader;
 	if(sf::Shader::isAvailable()) {
 		if(!shader.loadFromFile("vertex_shader.glsl", "fragment_shader.glsl")) {
 			perror("Error loading shader!");
-			return -1;
+			return EXIT_FAILURE;
 		}
 		sf::Shader::bind(&shader);
 	}
@@ -193,12 +214,12 @@ int main() {
 #ifdef WIN32
 	if(!arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf")) {
 		perror("Error loading the font: ");
-		return -1;
+		return EXIT_FAILURE;
 	}
 #else
 	if(!arial.loadFromFile("/usr/share/fonts/truetype/freefont/FreeSans.ttf")) {
 		perror("Error loading the font: ");
-		return -1;
+		return EXIT_FAILURE;
 	}
 #endif
 	const float textHeight = 30.0f;
@@ -206,7 +227,6 @@ int main() {
 	sf::Text lSystemName(lsystems[selectedLSystem].getName(), arial, (unsigned int) textHeight);
 	float textWidth = lSystemName.getGlobalBounds().width;
 	lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
-
 	while(window.isOpen()) {
 		sf::Event event;
 		while(window.pollEvent(event)) {

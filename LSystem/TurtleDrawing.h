@@ -1,11 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
-#ifdef WIN32
-#include "SFML\Graphics.hpp"
-#else
 #include "SFML/Graphics.hpp"
-#endif
 #include <stack>
 #include <iostream>
 
