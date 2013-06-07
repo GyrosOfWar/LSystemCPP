@@ -11,7 +11,9 @@ the path in the project properties. Also, don't forget to put the SFML DLLs in t
 Install SFML 2.0
 Make sure you have exported `LD_LIBRARY_PATH`
 There is a Makefile in the LSystem/ directory of the project path
+
 `make all`
+
 `./LSystem.app`
 
 ## How to use
