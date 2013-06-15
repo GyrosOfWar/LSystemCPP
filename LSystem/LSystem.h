@@ -8,24 +8,21 @@ using std::vector;
 class LSystem {
 	vector<Rule> rules;
 	string axiom;
-	string current;
 	double angle;
 	int iterations;
 	int distance;
-	TurtleDrawing td;
 	string name;
 	sf::Color colorList[3];
 public:
 	explicit LSystem(string name, vector<Rule> rules, string axiom, double angle, int iterations, int distance, int startX, int startY);
-	void step();
-	sf::VertexArray draw();
+	void draw(TurtleDrawing& td);
 	void clear();
 
-	TurtleDrawing getDrawing();
 	void setIterations(int);
 	int getIterations();
 	string getName();
 	string getCurrent();
 private: 
+	string step();
 	string apply_rules(const string state, const vector<Rule>& rules);
 };

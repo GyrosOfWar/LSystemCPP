@@ -25,7 +25,7 @@ bool mouseDrag = false;
 float scale = 1.0f;
 std::vector<LSystem> lsystems;
 int selectedLSystem = 0;
-vector<sf::VertexArray> verts;
+vector<TurtleDrawing> drawings;
 float grayscale = 0;
 
 double toRadians(double deg) {
@@ -41,43 +41,36 @@ void createLSystems() {
     vector<Rule> dragon_curve_rules;
     dragon_curve_rules.push_back(Rule('X', "X+YF"));
     dragon_curve_rules.push_back(Rule('Y', "FX-Y"));
-    lsystems.push_back(LSystem("Dragon Curve", dragon_curve_rules, "FX", Pi / 2.0, 11, 10, 0, 0));
-    lsystems[0].step();
 
     vector<Rule> koch_rules;
     koch_rules.push_back(Rule('F', "F+F-F-F+F"));
     lsystems.push_back(LSystem("Koch Curve", koch_rules, "F", Pi / 2.0, 4, 10, 0, 0));
-    lsystems[1].step();
 
     vector<Rule> plant_rules;
     plant_rules.push_back(Rule('F', "C0FF-[C1-F+F+F]+[C2+F-F-F]"));
     lsystems.push_back(LSystem("Fractal Plant", plant_rules, "F", toRadians(22), 4, 10, 0, 0));
-    lsystems[2].step();
 
     vector<Rule> sierpinski_rules;
     sierpinski_rules.push_back(Rule('F', "F-G+F+G-F"));
     sierpinski_rules.push_back(Rule('G', "GG"));
     lsystems.push_back(LSystem("Sierpinski Triangle", sierpinski_rules, "F-G-G", toRadians(120), 6, 10, 0, 0));
-    lsystems[3].step();
 
     vector<Rule> screen_filling_curve_rules;
     screen_filling_curve_rules.push_back(Rule('X', "-YF+XFX+FY-"));
     screen_filling_curve_rules.push_back(Rule('Y', "+XF-YFY-FX+"));
     lsystems.push_back(LSystem("Screen Filling Curve", screen_filling_curve_rules, "X", toRadians(90), 6, 10, 0, 0));
-    lsystems[4].step();
 
 	vector<Rule> stochastic_plant_rules;
 	stochastic_plant_rules.push_back(Rule('F', "F[+F]F[-F]F", 1.0 / 3.0));
 	stochastic_plant_rules.push_back(Rule('F', "F[+F]F", 1.0 / 3.0));
 	stochastic_plant_rules.push_back(Rule('F', "F[-F]F", 1.0 / 3.0));
-	lsystems.push_back(LSystem("Stochastic Plant", stochastic_plant_rules, "F", toRadians(22), 5, 10, 0, 0));
-	lsystems[5].step();
+	lsystems.push_back(LSystem("Stochastic Plant", stochastic_plant_rules, "F", toRadians(27), 6, 10, 0, 0));
 }
 int calcSize() {
 	int vecSize = sizeof(sf::Vertex);
 	int size = 0;
-	for(auto it = verts.begin(); it != verts.end(); ++it) {
-		sf::VertexArray v = (*it);
+	for(auto it = drawings.begin(); it != drawings.end(); ++it) {
+		sf::VertexArray v = it->getVertices();
 		for(int i = 0; i < v.getVertexCount(); ++i) {
 			size += sizeof(v[i]);
 		}
@@ -85,11 +78,9 @@ int calcSize() {
 	return size;
 }
 
-
 void redraw(int selected) {
-	lsystems[selected].clear();
-	lsystems[selected].step();
-	verts[selected] = lsystems[selected].draw();
+	drawings[selected].clear();
+	lsystems[selected].draw(drawings[selected]);
 	cout << "vecSize = " << calcSize() << endl;
 }
 
@@ -197,7 +188,9 @@ int main() {
 
 	// Build vector of VertexArrays that hold the vertices for every L-System
 	for(unsigned int i = 0; i < lsystems.size(); i++) {
-		verts.push_back(lsystems[i].draw());
+		//verts.push_back(lsystems[i].draw());
+		drawings.push_back(TurtleDrawing(0, 0));
+		lsystems[i].draw(drawings[i]);
 	}
 	// Load shader.
 	sf::Shader shader;
@@ -237,7 +230,7 @@ int main() {
 		lSystemName.setPosition(xSize - textWidth - offset, ySize - (textHeight + offset));
 		window.clear();
 		shader.setParameter("grayscale", grayscale);
-		window.draw(verts[selectedLSystem], &shader);
+		window.draw(drawings[selectedLSystem].getVertices(), &shader);
 		window.draw(lSystemName);
 		window.setView(standard);
 		window.display();

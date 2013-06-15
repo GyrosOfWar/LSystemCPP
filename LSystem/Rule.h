@@ -15,4 +15,5 @@ public:
 	double getWeight() const;
 	void setLHS(const char c);
 	void setRHS(const string s);
+	bool equals(const Rule& other) const;
 };

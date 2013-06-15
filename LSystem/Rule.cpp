@@ -33,3 +33,7 @@ void Rule::setLHS(const char c) {
 void Rule::setRHS(const string s) {
 	rhs = s;
 }
+
+bool Rule::equals(const Rule& other) const {
+	return this->lhs == other.lhs && this->rhs == other.rhs && this->weight == other.weight;
+}
