@@ -25,11 +25,9 @@ string LSystem::step() {
 // Applies a set of rules to a given state string and returns the new state.
 string LSystem::apply_rules(const string state, const vector<Rule>& rules) {
 	string result;
-	std::default_random_engine generator;
+	std::random_device r_dev;
+	std::default_random_engine generator (r_dev());
 	std::uniform_real_distribution<double> distribution(0.0, 1.0);
-	int rule1count = 0;
-	int rule2count = 0;
-	int rule3count = 0;
 	// Iterate over the state string
 	for(auto it = state.begin(); it != state.end(); ++it) {
 		double rand = distribution(generator);
@@ -38,27 +36,15 @@ string LSystem::apply_rules(const string state, const vector<Rule>& rules) {
 		// Check for a matching rule by iterating over all rules
 		for(auto jt = rules.begin(); jt != rules.end(); ++jt) {
 			if(jt->getLHS() == current && rand > jt->getWeight()) {
-				if(name == "Stochastic Plant") {
-					if(jt->equals(rules[0])) {
-						rule1count++;
-					}
-					if(jt->equals(rules[1])) {
-						rule2count++;
-					}
-					if(jt->equals(rules[2])) {
-						rule3count++;
-					}
-				}
 				match = *jt;
 			}
 		}
 		// If there was no match, append the current character
-		if(match.getLHS() == '\0') {
+		if(match.getLHS() == '\0')
 			result += current;
-			// Else append the RHS of the rule
-		} else {
+		// Else append the RHS of the rule
+		else 
 			result += match.getRHS();
-		}
 	}
 	return result;
 }
