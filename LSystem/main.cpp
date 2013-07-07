@@ -15,7 +15,7 @@ using std::cout;
 const static int xSize = 1280;
 const static int ySize = 800;
 const static double Pi = 3.141592653589793;
-const static int NumLSystems = 6;
+const static int NumLSystems = 5;
 const static float ZoomInFactor = 1.2f;
 const static float ZoomOutFactor = 0.8f;
 
